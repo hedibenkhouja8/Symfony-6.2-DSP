@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{product.name}}
+{% endblock %}
+
+{% block body %}
+<div class="row my-5">
+    <div class="col-md-12">
+        <div class="row">
+            {% if product %}
+                <div class="col-md-8">
+                    <div class="card">
+                        {% if product.image %}
+                            <img src="{{photo_url~product.image}}"
+                                alt="{{product.name}}" 
+                                height="400"
+                                width="600"
+                                class="card-img-top">
+                        {% else %}
+                            <img src="{{photo_url~'flowers.png'}}"
+                                alt="{{product.name}}" 
+                                height="400"
+                                width="600"
+                                class="card-img-top">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{product.name}}</h5>
+                            <p class="card-text">{{product.description}}</p>
+                            <h5><span class="text text-danger">{{product.price}} euro</span></h5>
+                            <h5><span class="text text-success">{{product.category.name}}</span></h5> 
+                             
+                    {% if is_granted('ROLE_ADMIN') %}
+         <a href="{{path('product_edit',{id: product.id})}}" class="btn btn-sm btn-warning">
+                                            edit
+                                        </a>
+         <form id="{{product.id}}" action="{{path('product_delete',{id: product.id})}}"
+                                            method="post"></form>
+                                        <button onclick="deleteItem('{{product.id}}')" class="btn btn-sm btn-danger">
+                                            delete
+                                        </button>{% else %}
+                                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    No product found!
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

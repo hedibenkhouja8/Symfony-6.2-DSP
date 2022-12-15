@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+<div class="container">
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Bonjour {{app.user.username}} !</h1>
+    <p class="lead">Voici la liste des articles disponibles.</p>
+  </div>
+</div>
+
+{% for message in app.flashes('success') %}
+
+<div class="alert alert-success" role="alert">
+{{ message }}
+</div>
+{% endfor %}<div>
+                <a href="{{path('products')}}" class="btn btn-sm btn-outline-dark mx-1">
+                    All
+                </a>
+                {% for category in categories %}
+                    <a href="{{path('product_category',{category: category.id})}}" class="btn btn-sm btn-outline-dark mx-1">
+                        {{category.name}}
+                    </a>
+                {% endfor %}
+            </div>
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-end">
+    <span>Liste des produits :   {{products|length}} Produits</span>
+    <a href="{{ path('store_product')}}" class="btn btn-info"> Ajouter Produit</a>
+  </div>
+</div> <br><br><div class="row pb-5 mb-4">
+
+{% for product in products %}
+    <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+      <!-- Card-->
+      <div class="card rounded shadow-sm border-0">
+        <div class="card-body p-4"><img src="{{photo_url~product.image}}" height ="284px" width="462px" alt="" class="img-fluid d-block mx-auto mb-3">
+          <h5> <a href="#" class="text-dark">{{product.name}}</a></h5>
+          <p class="small text-muted font-italic"> {{product.description}}</p>
+          <ul class="list-inline small">
+            <li class="list-inline-item m-0">Prix :  {{product.price}} <i class="fa-solid fa-money-bill"></i></li>
+            <li class="list-inline-item m-0">
+           <a href="{{path('product_details',{id: product.id})}}" class="btn btn-sm btn-dark">
+                                            details
+                                        </a></li>
+           
+          </ul><div>
+                    {% if is_granted('ROLE_ADMIN') %}
+         <a href="{{path('product_edit',{id: product.id})}}" class="btn btn-warning">
+                                            edit
+                                        </a>
+         <form id="{{product.id}}" action="{{path('product_delete',{id: product.id})}}"
+                                            method="post"></form>
+                                        <button onclick="deleteItem('{{product.id}}')" class="btn btn-danger">
+                                            delete
+                                        </button>
+                                        {% else %}
+                                     
+                                            {% endif %}</div>
+        </div>
+      </div>
+    <br><br>
+    </div>
+
+{% endfor %}
+  <div class="row">
+{% for product in products %}
+  <div class="col-sm-3">
+    <div class="card">
+      <div class="card-body">
+      
+  <img class="card-img-top flui my-2 rounded" src="{{photo_url~product.image}}" height ="250" width="50" alt="Card image cap" style="border-radius: 20px; border-color : white; ">
+  <br><br>
+        <h5 class="card-title">Nom : {{product.name}}</h5>
+        <p class="card-text">Description : {{product.description}}</p>
+        
+        <p class="card-text">Prix : {{product.price}}</p>
+        <p class="card-text">Category : {{product.category}}</p>
+        <a href="{{path('product_details',{id: product.id})}}" class="btn btn-sm btn-dark">
+                                            details
+                                        </a>
+                    {% if is_granted('ROLE_ADMIN') %}
+         <a href="{{path('product_edit',{id: product.id})}}" class="btn btn-sm btn-warning">
+                                            edit
+                                        </a>
+         <form id="{{product.id}}" action="{{path('product_delete',{id: product.id})}}"
+                                            method="post"></form>
+                                        <button onclick="deleteItem('{{product.id}}')" class="btn btn-sm btn-danger">
+                                            delete
+                                        </button>
+                                        {% else %}
+                                     
+                                            {% endif %}
+      </div>
+    <br>
+    </div>
+    <br>
+  </div>
+{% endfor %}
+
+</div>
+{% endblock %}
